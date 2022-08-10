@@ -1,9 +1,17 @@
-import React from 'react';
+import React,{useState} from 'react';
 import './App.css';
+import InputFied from './components/inputField';
 
-function App() {
+const App = () => {
+  const [todo, setTodo] = useState<string>("");
+  console.log("hi");
+  console.log(todo);
+  
   return (
-    <h1>hi</h1>
+    <div className="App">
+      <span className="heading">Taskify</span>
+      <InputFied todo={todo} setTodo={setTodo} />
+    </div>
   );
 }
 
