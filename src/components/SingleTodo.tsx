@@ -1,8 +1,9 @@
-import React,{useEffect, useRef, useState} from 'react'
+import React,{useEffect, useReducer, useRef, useState} from 'react'
 import { GrCheckmark } from 'react-icons/gr';
 import { AiFillEdit } from 'react-icons/ai';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { Todo } from './model';
+
 
 type AppProps = {
     todo: Todo;
@@ -10,7 +11,35 @@ type AppProps = {
     setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
-const SingleTodo = ({todo, todos, setTodos}: AppProps) => {
+type Actions = {type:"ADD"; payload: string} | {type:"REMOVE"; payload: number} | {type:"DONE", payload: number}
+const reducer = (state: Todo[], action: Actions) => {
+    switch (action.type) {
+        // case "ADD":
+        //     return[
+        //         ...state,
+        //         {id: Date.now, todo: action.payload , isDone: false}
+        //     ];
+            
+        case "REMOVE":
+            console.log(state.map((todo)=> todo.id === action.payload ? todo.todo : ""));
+            
+            return state.filter((todo) => todo.id !== action.payload);
+        
+        case "DONE":
+            return state.map((todo) => {
+            if (todo.id === action.payload) {
+                return { ...todo, isDone: !todo.isDone };
+            } else {
+                return todo;
+            }
+            });
+            default:
+                return state;
+    }
+  };
+  
+  const SingleTodo = ({todo, todos, setTodos}: AppProps) => {
+    const [todoState, dispatch] = useReducer(reducer, [...todos]);
     const [edit, setEdit] = useState<boolean>(false);
     const [editTodo, setEditTodo] = useState<string>(todo.todo);
 
@@ -23,6 +52,22 @@ const SingleTodo = ({todo, todos, setTodos}: AppProps) => {
         });
         setTodos(updateTodos);
     };
+
+    // const handleComplete = (id: number) => {
+    //     dispatch({ type: "DONE", payload: id });
+    //     console.log(todoState);
+    //     let newTodos = [...todos].map((item, i) => Object.assign({}, item, todoState[i]));
+    //     console.log(newTodos);
+    //     setTodos(todoState);
+    // };
+    
+    // const handleDelete = (id: number) => {
+    //     dispatch({ type: "REMOVE", payload: id });
+    //     console.log(todoState);
+    //     let newTodos = [...todos].filter(todo => todo.id !== id)
+    //     console.log(newTodos);
+    //     setTodos(newTodos);
+    // };
 
     const handleDelete = (id: number) => {
         const removeArr = [...todos].filter(todo => todo.id !== id)
