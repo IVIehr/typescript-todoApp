@@ -9,16 +9,13 @@ const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
 
   const handleAdd = () => {
-    console.log(`${todo} added`);
     if (todo) {
       setTodos([...todos, { id: Date.now(), todo, isDone: false }])
       // Empty the input
       setTodo("");
     }
   }
-
-  console.log(todos);
-  
+    
   return (
     <div className="App">
       <span className="heading">Taskify</span>
