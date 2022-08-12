@@ -7,8 +7,7 @@ interface AppProps{
     handleAdd: () => void
 }
 type Inputs = {
-//   example: string,
-  exampleRequired: string,
+  todoText: string,
 };
 
 const InputField = ({todo, setTodo, handleAdd}: AppProps) => {
@@ -18,9 +17,9 @@ const InputField = ({todo, setTodo, handleAdd}: AppProps) => {
         inputRef.current?.blur();
     };
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const { ref, ...rest } = register("exampleRequired",{ required: true });
+    const { ref, ...rest } = register("todoText",{ required: true });
 
-//   console.log(watch("example")) // watch input value by passing the name of it
+  // console.log(watch("todoText")) // watch input value by passing the name of it
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
@@ -31,15 +30,14 @@ const InputField = ({todo, setTodo, handleAdd}: AppProps) => {
               className="input__box"
               placeholder="Enter a task"
               value={todo}
-            //   {...register("exampleRequired", { required: true })}
               ref={(e) => {
                 ref(e)
-                inputRef.current = e // you can still assign to ref
+                inputRef.current = e
               }}
               onChange={(e) => setTodo(e.target.value)}
           />
       {/* errors will return when field validation fails  */}
-      {errors.exampleRequired && <div className="error">This field is required</div>}
+      {errors.todoText && <div className="error">This field is required</div>}
       
       <input className="input_submit" type="submit" value="GO"/>
     </form>

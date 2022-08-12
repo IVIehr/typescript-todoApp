@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useRef, useState} from 'react'
 import { GrCheckmark } from 'react-icons/gr';
 import { AiFillEdit } from 'react-icons/ai';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -29,7 +29,7 @@ const SingleTodo = ({todo, todos, setTodos}: AppProps) => {
         setTodos(removeArr);
     };
 
-    const handleEdit = (e: React.FormEvent, id: number) =>{
+    const handleEdit = (e: React.FormEvent, id: number) => {
         e.preventDefault();
         setTodos(
             todos.map((todo) => (
@@ -37,10 +37,17 @@ const SingleTodo = ({todo, todos, setTodos}: AppProps) => {
             )));
         setEdit(false);
     }
+
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    // Focus while editting 
+    useEffect(() => {
+        inputRef.current?.focus();
+    },[edit]);
+
   return (
       <div>
           <form className={todo.isDone ? 'todos__single complete' : 'todos__single'} onSubmit={e => handleEdit(e, todo.id)}>
-              {edit ? <input className='todos__single--text' value={editTodo} onChange={e => setEditTodo(e.target.value)} /> : <span className="todos__single--text">{todo.todo}</span>}
+              {edit ? <input className='todos__single--text' ref={inputRef} value={editTodo} onChange={e => setEditTodo(e.target.value)} /> : <span className="todos__single--text">{todo.todo}</span>}
               <span className="icon">
                 <GrCheckmark onClick={() => handleComplete(todo.id)}/>    
               </span>
