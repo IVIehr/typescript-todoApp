@@ -11,6 +11,8 @@ type AppProps = {
     todos: Todo[];
     setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
     index: number;
+    completedTodos: Todo[];
+    setCompletedTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
 type Actions = {type:"ADD"; payload: string} | {type:"REMOVE"; payload: number} | {type:"DONE", payload: number}
@@ -40,18 +42,32 @@ const reducer = (state: Todo[], action: Actions) => {
     }
   };
   
-  const SingleTodo = ({todo, todos, setTodos, index}: AppProps) => {
+  const SingleTodo = ({todo, todos, setTodos, index, completedTodos,setCompletedTodos}: AppProps) => {
     const [todoState, dispatch] = useReducer(reducer, [...todos]);
     const [edit, setEdit] = useState<boolean>(false);
     const [editTodo, setEditTodo] = useState<string>(todo.todo);
 
-    const handleComplete = (id: number) => {
+      const handleComplete = (id: number) => {
+        let arr: Todo[] = [];
         let updateTodos = todos.map(todo => {
             if (todo.id === id) {
                 todo.isDone = !todo.isDone;
             }
+            if (todo.isDone === true) {
+                arr.push(todo);
+            }
+            // else {
+            //     if (arr.includes(todo)) {
+            //         arr.filter(t => t !== todo);
+            //     }
+            // }
             return todo;
         });
+          
+        //   let newTodos = [...arr].map((item, i) => Object.assign({}, item, completedTodos[i]));
+        //   console.log(newTodos);
+          
+        // setCompletedTodos(newTodos);
         setTodos(updateTodos);
     };
 

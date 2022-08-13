@@ -28,6 +28,8 @@ const Todolist = ({todos, setTodos, completedTodos, setCompletedTodos}: AppProps
                   todo={todo}
                   key={todo.id}
                   setTodos={setTodos}
+                  completedTodos={completedTodos}
+                  setCompletedTodos={setCompletedTodos}
                 />
               ))}
               {provided.placeholder}
@@ -51,6 +53,8 @@ const Todolist = ({todos, setTodos, completedTodos, setCompletedTodos}: AppProps
                   todo={todo}
                   key={todo.id}
                   setTodos={setCompletedTodos}
+                  completedTodos={completedTodos}
+                  setCompletedTodos={setCompletedTodos}
                 />
               ))}
               {provided.placeholder}
