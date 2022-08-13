@@ -8,10 +8,14 @@ interface AppProps {
 }
 const Todolist = ({todos, setTodos}: AppProps) => {
   return (
-    <div className='todos'>
-      {todos.map((t) =>
+    <div className='container'>
+      <div className="todos">
+        <span className="todos_heading">Active Tasks</span>
+        {todos.map((t) =>
         <SingleTodo todo={t} key={t.id} todos={todos} setTodos={setTodos} />
       )}
+      </div>
+      <div className="todos remove">Completed Tasks</div>
     </div>
   )
 }
