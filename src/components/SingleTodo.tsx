@@ -3,12 +3,14 @@ import { GrCheckmark } from 'react-icons/gr';
 import { AiFillEdit } from 'react-icons/ai';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { Todo } from './model';
+import { Draggable } from 'react-beautiful-dnd';
 
 
 type AppProps = {
     todo: Todo;
     todos: Todo[];
     setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+    index: number;
 }
 
 type Actions = {type:"ADD"; payload: string} | {type:"REMOVE"; payload: number} | {type:"DONE", payload: number}
@@ -38,7 +40,7 @@ const reducer = (state: Todo[], action: Actions) => {
     }
   };
   
-  const SingleTodo = ({todo, todos, setTodos}: AppProps) => {
+  const SingleTodo = ({todo, todos, setTodos, index}: AppProps) => {
     const [todoState, dispatch] = useReducer(reducer, [...todos]);
     const [edit, setEdit] = useState<boolean>(false);
     const [editTodo, setEditTodo] = useState<string>(todo.todo);
@@ -90,26 +92,47 @@ const reducer = (state: Todo[], action: Actions) => {
     },[edit]);
 
   return (
-      <div>
-          <form className={todo.isDone ? 'todos__single complete' : 'todos__single'} onSubmit={e => handleEdit(e, todo.id)}>
-              {edit ? <input className='todos__single--text' ref={inputRef} value={editTodo} onChange={e => setEditTodo(e.target.value)} /> : <span className="todos__single--text">{todo.todo}</span>}
-              <span className="icon">
-                <GrCheckmark onClick={() => handleComplete(todo.id)}/>    
-              </span>
-              <span className="icon"
-                  onClick={() => {
-                      if (!edit && !todo.isDone) {
-                          setEdit(!edit)
-                      }
-                 }}
-                >
-                  <AiFillEdit /> 
-              </span>
-              <span className="icon" onClick={() => handleDelete(todo.id)}>
-                 <RiDeleteBin6Fill/>  
-              </span>
-          </form>
-    </div>
+    <Draggable draggableId={todo.id.toString()} index={index}>
+        {(provided) => (
+            <form
+                className={todo.isDone ? 'todos__single complete' : 'todos__single'}
+                onSubmit={e => handleEdit(e, todo.id)}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                ref={provided.innerRef}
+            >
+                {edit ? (
+                <input
+                value={editTodo}
+                onChange={(e) => setEditTodo(e.target.value)}
+                className="todos__single--text"
+                ref={inputRef}
+                />
+                ) : todo.isDone ? (
+                    <s className="todos__single--text">{todo.todo}</s>
+                ) : (
+                    <span className="todos__single--text">{todo.todo}</span>
+                  )}
+                <div>
+                    <span className="icon">
+                        <GrCheckmark onClick={() => handleComplete(todo.id)}/>    
+                    </span>
+                    <span className="icon"
+                        onClick={() => {
+                            if (!edit && !todo.isDone) {
+                                setEdit(!edit)
+                            }
+                        }}
+                        >
+                        <AiFillEdit /> 
+                    </span>
+                    <span className="icon" onClick={() => handleDelete(todo.id)}>
+                        <RiDeleteBin6Fill/>  
+                    </span>
+                </div>
+            </form>
+        )}
+    </Draggable>
   )
 }
 
